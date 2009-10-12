@@ -80,7 +80,9 @@ describe 'Repo' do
       end
 
       it "should have added the file to the tree" do
-        # repo.tree.contents[0].name.should == "ar"
+        repo = Grit::Repo.new(working_dir)
+        repo.tree.contents.length.should == 1
+        repo.tree.contents[0].name.should == "app.rb"
       end
     end
   end
