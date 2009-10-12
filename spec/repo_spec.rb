@@ -4,6 +4,11 @@ require 'sinatra/test/unit'
 require 'models/repo'
 require 'json'
  
+Spec::Matchers.define :be_a_directory do
+  match do |actual|
+    File.directory?(actual)
+  end
+end
  
 describe 'Repo' do
   require 'forkserv'
@@ -30,7 +35,8 @@ describe 'Repo' do
     end
 
     it "should create a working dir" do
-
+      working_dir = "#{Repo.working_dirs_root}/1444"
+      working_dir.should be_a_directory
     end
 
     it "should initialize a git repository" do
