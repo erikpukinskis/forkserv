@@ -3,6 +3,7 @@ require 'spec/interop/test'
 require 'sinatra/test/unit'
 require 'models/repo'
 require 'json'
+require 'grit'
  
 Spec::Matchers.define :be_a_directory do
   match do |actual|
@@ -14,15 +15,20 @@ describe 'Repo' do
   require 'forkserv'
  
   describe "after posting to /repos" do
-    before :all do
-      Repo.stub!(:fresh_id).and_return("1444")
-      post_it '/repos'
-    end
-
     def response_object
       JSON.parse(response.body)
     rescue
       nil
+    end
+
+    def working_dir
+      "#{Repo.working_dirs_root}/1444"
+    end
+
+    before :all do
+      FileUtils::rm_r(working_dir)
+      Repo.stub!(:fresh_id).and_return("1444")
+      post_it '/repos'
     end
 
     it "should return an OK response" do
@@ -35,12 +41,11 @@ describe 'Repo' do
     end
 
     it "should create a working dir" do
-      working_dir = "#{Repo.working_dirs_root}/1444"
       working_dir.should be_a_directory
     end
 
     it "should initialize a git repository" do
-
+      lambda {Grit::Repo.new(working_dir)}.should_not raise_error
     end
   end
 end
