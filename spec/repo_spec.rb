@@ -36,6 +36,10 @@ describe 'Repo' do
       response_object['status'].should == 'ok'
     end
 
+    def file_contents(name)
+      File.open(name, 'r') {|f| f.read}
+    end
+
     before :all do
       FileUtils::rm_r(working_dir)
       Repo.stub!(:fresh_id).and_return("1444")
@@ -60,7 +64,7 @@ describe 'Repo' do
 
     describe "posting some file contents" do
       before :all do
-        post_it '/repos/1444/files/app.rb', {:data => "blah"}
+        post_it '/repos/1444/files/app.rb', {:content => "blah"}
       end
 
       it "should give a response" do
@@ -72,7 +76,7 @@ describe 'Repo' do
       end
 
       it "should write the text" do
-        # should contain blah
+        file_contents("#{working_dir}/app.rb").should == "blah"
       end
 
       it "should have added the file to the tree" do
