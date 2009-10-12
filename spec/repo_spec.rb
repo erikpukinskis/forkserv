@@ -21,6 +21,13 @@ describe 'Repo' do
   require 'forkserv'
  
   describe "after posting to /repos" do
+    before :all do
+      @repo_id = "1444"
+      Repo.stub!(:fresh_id).and_return(@repo_id)
+      FileUtils::rm_r(working_dir) if File.directory?(working_dir)
+      post '/repos'
+    end
+
     def response_object
       JSON.parse(response.body)
     rescue
@@ -28,7 +35,7 @@ describe 'Repo' do
     end
 
     def working_dir
-      "#{Repo.working_dirs_root}/1444"
+      "#{Repo.working_dirs_root}/#{@repo_id}"
     end
 
     def response_should_be_ok
@@ -38,12 +45,6 @@ describe 'Repo' do
 
     def file_contents(name)
       File.open(name, 'r') {|f| f.read}
-    end
-
-    before :all do
-      FileUtils::rm_r(working_dir)
-      Repo.stub!(:fresh_id).and_return("1444")
-      post_it '/repos'
     end
 
     it "should return an OK response" do
@@ -64,7 +65,11 @@ describe 'Repo' do
 
     describe "posting some file contents" do
       before :all do
-        post_it '/repos/1444/files/app.rb', {:content => "blah"}
+        @repo_id = "1234"
+        Repo.stub!(:fresh_id).and_return(@repo_id)
+        FileUtils::rm_r(working_dir) if File.directory?(working_dir)
+        post '/repos'
+        post '/repos/1234/files/app.rb', {:content => "blah"}
       end
 
       it "should give a response" do
@@ -83,6 +88,40 @@ describe 'Repo' do
         repo = Grit::Repo.new(working_dir)
         repo.tree.contents.length.should == 1
         repo.tree.contents[0].name.should == "app.rb"
+      end
+    end
+
+    describe "posting a complete sinatra app" do
+      before :all do
+        @repo_id = "1222"
+        Repo.stub!(:fresh_id).and_return(@repo_id)
+        FileUtils::rm_r(working_dir) if File.directory?(working_dir)
+        post '/repos'
+        post '/repos/1222/files/app.rb', {:content => "
+          require 'rubygems'
+          require 'sinatra'
+    
+          get '/' do
+            'hello world!'
+          end
+        "}
+        post '/repos/1222/files/config.ru', {:content => "
+          require 'app'
+          run Sinatra::Application
+        "}
+        post '/repos/1222/deploy'
+      end
+
+      it "should give a response" do
+        response_should_be_ok
+      end
+
+      it "should return a heroku url" do
+
+      end
+
+      it "should be running and say hello world" do
+
       end
     end
   end

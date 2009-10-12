@@ -14,9 +14,17 @@ class Repo
       self.id = id
     else
       self.id = Repo.fresh_id
-      make_dir
+      m = make_dir
       initialize_git
     end
+  end
+
+  def Repo.fresh_id
+    while(candidate = rand(10**10))
+      repo = Repo.new(candidate)
+      break if !File.directory?(repo.working_dir)
+    end
+    candidate
   end
 
   def git
