@@ -141,7 +141,7 @@ describe 'Repo' do
 
       it "should return a heroku url" do
         pending
-        response_object['uri'].should match(/\.heroku\.com/)
+        response_object['uri'].should match(/http:\/\/[a-z0-9-]{5,}\.heroku\.com/)
       end
 
       it "should be running and say hello world" do

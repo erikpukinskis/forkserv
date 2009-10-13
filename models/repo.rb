@@ -107,7 +107,7 @@ class Repo
   end
 
   def uri
-    nil unless heroku_name
+    nil unless heroku_name.length > 5
     "http://#{heroku_name}.heroku.com"
   end
 end
