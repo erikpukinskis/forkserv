@@ -4,6 +4,7 @@ require 'sinatra/test/unit'
 require 'models/repo'
 require 'json'
 require 'grit'
+require 'net/http'
  
 Spec::Matchers.define :be_a_directory do
   match do |actual|
@@ -109,19 +110,23 @@ describe 'Repo' do
           require 'app'
           run Sinatra::Application
         "}
-        post '/repos/1222/deploy'
+        #post '/repos/1222/deploy'
       end
 
       it "should give a response" do
+        pending
         response_should_be_ok
       end
 
       it "should return a heroku url" do
-
+        pending
+        response_object['uri'].should match(/\.heroku\.com/)
       end
 
       it "should be running and say hello world" do
-
+        pending
+        http_response = Net::HTTP.get_response(URI.parse(response_object['uri']))  
+        http_response.body.should match(/hello world!/)
       end
     end
   end

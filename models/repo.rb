@@ -1,4 +1,24 @@
 require 'grit'
+require 'heroku'
+
+module Grit
+  class Repo
+    def remotes
+      FileUtils.chdir working_dir
+      `git remote`.split(/\n/)
+    end
+
+    def add_remote(name, uri)
+      FileUtils.chdir working_dir
+      `git remote add #{name} #{uri}`
+    end
+
+    def push(remote, branch)
+      FileUtils.chdir working_dir
+      `git push #{remote} #{branch}`
+    end
+  end
+end
 
 class String
   def starts_with(beginning)
@@ -7,7 +27,7 @@ class String
 end
 
 class Repo
-  attr_accessor :id
+  attr_accessor :id, :uri, :heroku_name
 
   def initialize(id = nil)
     if id
@@ -59,5 +79,29 @@ class Repo
 
   def Repo.working_dirs_root 
     '/tmp/forkserv_working_dirs' 
+  end
+
+
+  def heroku
+    @heroku ||= Heroku::Client.new($config['heroku_username'], $config['heroku_password'])
+  end
+
+  def created?
+    git.remotes.include?('heroku')
+  end
+
+  def create
+    self.heroku_name = heroku.create
+    git.add_remote('heroku', "git@heroku.com:#{heroku_name}.git")
+  end
+
+  def deploy
+    create unless created? 
+    f = git.push('heroku', 'master')
+  end
+
+  def uri
+    nil unless heroku_name
+    "http://#{heroku_name}.heroku.com"
   end
 end
