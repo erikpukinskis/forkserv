@@ -1,5 +1,6 @@
 require 'grit'
 require 'heroku'
+require 'ruby-debug'
 
 module Grit
   class Repo
@@ -78,7 +79,8 @@ class Repo
   end
 
   def file_contents(name)
-    File.open(clean(name), 'r') {|f| f.read }
+    path = "#{working_dir}/#{clean(name)}"
+    File.open(path, 'r') {|f| f.read }
   end
 
   def Repo.working_dirs_root 
