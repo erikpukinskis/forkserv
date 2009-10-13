@@ -103,7 +103,6 @@ class Repo
 
   def deploy
     create unless created? 
-    debugger
     f = git.push('heroku', 'master')
   end
 
