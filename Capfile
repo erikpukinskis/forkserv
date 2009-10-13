@@ -1,0 +1,15 @@
+task :search_libs, :hosts => "www.capify.org" do
+  run "adduser forkserv"
+  run "passwd forkserv"
+  run "yum install git-core"
+  run "gem install sinatra"
+  run "ruby forkserv.rb"
+  run "su forkserv"
+  run "mkdir ~/production"
+  run "cd ~/production"
+  run "git clone http://git.gitorious.org/forkolator/forkserv.git"
+  run "exit"
+  run "cd /home/forkserv/productin/forkserv"
+  run "killall mongrel_rails"
+  run "ruby forkserv -p 80"
+end
