@@ -18,6 +18,11 @@ post '/repos/:id/files/:filename' do
   {'status' => 'ok'}.to_json
 end
 
+get '/repos/:id/files/:filename' do
+  repo = Repo.new(params[:id])
+  repo.file_contents(params[:filename])
+end
+
 post '/repos/:id/deploy' do
   repo = Repo.new(params[:id])
   repo.deploy

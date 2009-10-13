@@ -77,6 +77,10 @@ class Repo
     git.commit_index("saved #{name}")
   end
 
+  def file_contents(name)
+    File.open(clean(name), 'r') {|f| f.read }
+  end
+
   def Repo.working_dirs_root 
     '/tmp/forkserv_working_dirs' 
   end
@@ -97,6 +101,7 @@ class Repo
 
   def deploy
     create unless created? 
+    debugger
     f = git.push('heroku', 'master')
   end
 

@@ -92,6 +92,21 @@ describe 'Repo' do
       end
     end
 
+    describe "getting file contents" do
+      before :all do
+        @repo_id = "1111"
+        Repo.stub!(:fresh_id).and_return(@repo_id)
+        FileUtils::rm_r(working_dir) if File.directory?(working_dir)
+        post '/repos'
+        post '/repos/1111/files/app.rb', {:content => "blah"}
+      end
+
+      it "should return the contents" do
+        get '/repos/1111/files/app.rb'
+        @response.body.should == "blah"
+      end
+    end
+
     #
     # NOTE: This scenario is disabled because I don't want
     #       to hit Heroku all the time.  Uncomment the post

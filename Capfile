@@ -2,7 +2,7 @@ task :search_libs, :hosts => "www.capify.org" do
   run "adduser forkserv"
   run "passwd forkserv"
   run "yum install git-core"
-  run "gem install sinatra"
+  run "gem install sinatra grit heroku ruby-debug"
   run "ruby forkserv.rb"
   run "su forkserv"
   run "mkdir ~/production"
