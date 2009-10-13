@@ -92,6 +92,12 @@ describe 'Repo' do
       end
     end
 
+    #
+    # NOTE: This scenario is disabled because I don't want
+    #       to hit Heroku all the time.  Uncomment the post
+    #       in the before and remove all the pendings to
+    #       actually run it
+    #
     describe "posting a complete sinatra app" do
       before :all do
         @repo_id = "1222"
@@ -131,27 +137,3 @@ describe 'Repo' do
     end
   end
 end
-
-__END__
-
-  specify "should render hello at /" do
-    get_it '/'
-    @response.should be_ok
-    @response.body.should == "Hello"
-  end
- 
-  specify "should render argument at /anything" do
-    get_it '/foo'
-    @response.should be_ok
-    @response.body.should == "Hello foo"
- 
-    get_it '/bar'
-    @response.should be_ok
-    @response.body.should == "Hello bar"
-  end
- 
-  specify "should not respond to nested paths" do
-    get_it '/foo/bar'
-    @response.should_not be_ok
-  end
-

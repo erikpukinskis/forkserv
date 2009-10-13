@@ -1,6 +1,7 @@
 require 'rubygems'
 require 'sinatra'
 
+set :port, ARGV[1] if ARGV[0] == "-p"
 $config = YAML::load(File.read('config.yml'))
 
 post '/repos' do
