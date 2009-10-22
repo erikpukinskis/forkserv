@@ -18,6 +18,11 @@ module Grit
       FileUtils.chdir working_dir
       `git push #{remote} #{branch}`
     end
+
+    def clone(dir)
+      `git clone #{working_dir} #{dir}`
+      Repo.new(dir)
+    end
   end
 end
 
@@ -104,6 +109,12 @@ class Repo
   def deploy
     create unless created? 
     f = git.push('heroku', 'master')
+  end
+
+  def fork
+    repo = Repo.new(Repo.fresh_id)
+    git.clone(repo.working_dir)
+    repo
   end
 
   def uri

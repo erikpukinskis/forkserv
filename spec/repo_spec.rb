@@ -110,6 +110,31 @@ describe 'Repo' do
 
     describe "getting an old file" do
       before :all do
+        @repo_id = "2003"
+        Repo.stub!(:fresh_id).and_return(@repo_id)
+        FileUtils::rm_r(working_dir) if File.directory?(working_dir)
+        post '/repos'
+        post "/repos/2003/files/app.rb", {:content => "blah"}
+
+        @repo_id = "1987"
+        Repo.stub!(:fresh_id).and_return(@repo_id)
+        FileUtils::rm_r(working_dir) if File.directory?(working_dir)
+        post "/repos/2003/fork"
+      end
+
+      it "should return the old contents" do
+        @response.should be_ok
+        response_object['repo_id'].should == "1987"
+      end
+
+      it "should have made a new file" do
+        path = working_dir + "/app.rb"
+        path.should be_a_file
+      end
+    end
+
+    describe "getting an old file" do
+      before :all do
         @repo_id = "1221"
         Repo.stub!(:fresh_id).and_return(@repo_id)
         FileUtils::rm_r(working_dir) if File.directory?(working_dir)
