@@ -92,6 +92,23 @@ describe 'Repo' do
       end
     end
 
+    describe "getting commits" do
+      before :all do
+        @repo_id = "1001"
+        Repo.stub!(:fresh_id).and_return(@repo_id)
+        FileUtils::rm_r(working_dir) if File.directory?(working_dir)
+        post '/repos'
+        post '/repos/1001/files/app.rb', {:content => "blah"}
+        get '/repos/1001/commits'
+      end
+
+      it "should return one item" do
+        @response.should be_ok
+        response_object.length.should == 1
+      end
+      
+    end
+
     describe "getting file contents" do
       before :all do
         @repo_id = "1111"

@@ -113,4 +113,8 @@ class Repo
       nil
     end
   end
+
+  def commits
+    git.commits.inject([]) {|all,commit| all << {"sha" => commit.sha}}
+  end
 end
