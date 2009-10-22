@@ -1,0 +1,75 @@
+== Sinatra/0.9.4 has taken the stage on 80 for development with backup from Mongrel
+
+== Sinatra has ended his set (crowd applauds)
+== Sinatra/0.9.4 has taken the stage on 80 for development with backup from Mongrel
+76.227.83.128 - - [22/Oct/2009 01:55:25] "POST /repos HTTP/1.1" 200 36 0.0019
+76.227.83.128 - - [22/Oct/2009 01:55:26] "POST /repos/5640875899/files/app.rb HTTP/1.1" 200 15 0.0681
+76.227.83.128 - - [22/Oct/2009 01:55:27] "POST /repos/5640875899/files/config.ru HTTP/1.1" 200 15 0.1298
+Counting objects: 6, done.
+Compressing objects:  20% (1/5)   Compressing objects:  40% (2/5)   Compressing objects:  60% (3/5)   Compressing objects:  80% (4/5)   Compressing objects: 100% (5/5)   Compressing objects: 100% (5/5), done.
+Writing objects:  16% (1/6)   Writing objects:  33% (2/6)   Writing objects:  50% (3/6)   Writing objects:  66% (4/6)   Writing objects:  83% (5/6)   Writing objects: 100% (6/6)   Writing objects: 100% (6/6), 550 bytes, done.
+Total 6 (delta 1), reused 0 (delta 0)
+
+-----> Heroku receiving push
+-----> Sinatra app detected
+       Compiled slug size is 4K
+-----> Launching...... done
+       http://evening-fog-52.heroku.com deployed to Heroku
+
+To git@heroku.com:evening-fog-52.git
+ * [new branch]      master -> master
+76.227.83.128 - - [22/Oct/2009 01:55:40] "POST /repos/5640875899/deploy HTTP/1.1" 200 56 13.1352
+76.227.83.128 - - [22/Oct/2009 01:55:40] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 76 0.0007
+76.227.83.128 - - [22/Oct/2009 01:59:21] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 76 0.0007
+76.227.83.128 - - [22/Oct/2009 02:01:29] "POST /repos/5640875899/files/app.rb HTTP/1.1" 200 15 0.0380
+76.227.83.128 - - [22/Oct/2009 02:01:35] "POST /repos/5640875899/files/app.rb HTTP/1.1" 200 15 0.0364
+76.227.83.128 - - [22/Oct/2009 02:01:37] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 117 0.0007
+76.227.83.128 - - [22/Oct/2009 02:01:53] "POST /repos/5640875899/files/app.rb HTTP/1.1" 200 15 0.0178
+76.227.83.128 - - [22/Oct/2009 02:02:10] "POST /repos/5640875899/files/app.rb HTTP/1.1" 200 15 0.0190
+76.227.83.128 - - [22/Oct/2009 02:03:26] "POST /repos/5640875899/files/app.rb HTTP/1.1" 200 15 0.0711
+76.227.83.128 - - [22/Oct/2009 02:03:27] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 70 0.0008
+76.227.83.128 - - [22/Oct/2009 02:08:33] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 70 0.0007
+76.227.83.128 - - [22/Oct/2009 02:08:38] "POST /repos/5640875899/files/app.rb HTTP/1.1" 200 15 0.0404
+76.227.83.128 - - [22/Oct/2009 02:08:43] "POST /repos/5640875899/files/app.rb HTTP/1.1" 200 15 0.0378
+76.227.83.128 - - [22/Oct/2009 02:08:48] "POST /repos/5640875899/files/app.rb HTTP/1.1" 200 15 0.0378
+76.227.83.128 - - [22/Oct/2009 02:11:34] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 70 0.0007
+76.227.83.128 - - [22/Oct/2009 02:11:43] "POST /repos/5640875899/files/app.rb HTTP/1.1" 200 15 0.0178
+76.227.83.128 - - [22/Oct/2009 02:11:47] "POST /repos/5640875899/files/app.rb HTTP/1.1" 200 15 0.0650
+76.227.83.128 - - [22/Oct/2009 02:11:52] "POST /repos/5640875899/files/app.rb HTTP/1.1" 200 15 0.0914
+76.227.83.128 - - [22/Oct/2009 02:27:52] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 97 0.0007
+76.227.83.128 - - [22/Oct/2009 02:28:04] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 97 0.0007
+76.227.83.128 - - [22/Oct/2009 02:28:37] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 97 0.0007
+76.227.83.128 - - [22/Oct/2009 02:28:42] "POST /repos/5640875899/files/app.rb HTTP/1.1" 200 15 0.0179
+76.227.83.128 - - [22/Oct/2009 02:28:59] "POST /repos/5640875899/files/app.rb HTTP/1.1" 200 15 0.0377
+76.227.83.128 - - [22/Oct/2009 02:29:07] "POST /repos/5640875899/files/app.rb HTTP/1.1" 200 15 0.0381
+76.227.83.128 - - [22/Oct/2009 02:29:10] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 79 0.0007
+76.227.83.128 - - [22/Oct/2009 02:29:12] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 79 0.0007
+76.227.83.128 - - [22/Oct/2009 02:29:22] "POST /repos/5640875899/files/app.rb HTTP/1.1" 200 15 0.0180
+76.227.83.128 - - [22/Oct/2009 02:29:29] "POST /repos/5640875899/files/app.rb HTTP/1.1" 200 15 0.0714
+76.227.83.128 - - [22/Oct/2009 02:29:33] "POST /repos/5640875899/files/app.rb HTTP/1.1" 200 15 0.0728
+76.227.83.128 - - [22/Oct/2009 02:29:56] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 99 0.0007
+76.227.83.128 - - [22/Oct/2009 02:30:00] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 99 0.0007
+76.227.83.128 - - [22/Oct/2009 02:30:08] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 99 0.0006
+76.227.83.128 - - [22/Oct/2009 02:30:12] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 99 0.0007
+76.227.83.128 - - [22/Oct/2009 02:30:17] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 99 0.0007
+76.227.83.128 - - [22/Oct/2009 02:30:23] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 99 0.0007
+76.227.83.128 - - [22/Oct/2009 02:30:31] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 99 0.0007
+76.227.83.128 - - [22/Oct/2009 02:30:45] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 99 0.0007
+76.227.83.128 - - [22/Oct/2009 02:30:50] "POST /repos/5640875899/files/app.rb HTTP/1.1" 200 15 0.0658
+76.227.83.128 - - [22/Oct/2009 02:31:12] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 86 0.0007
+76.227.83.128 - - [22/Oct/2009 02:31:17] "POST /repos/5640875899/files/app.rb HTTP/1.1" 200 15 0.0607
+76.227.83.128 - - [22/Oct/2009 02:31:22] "POST /repos/5640875899/files/app.rb HTTP/1.1" 200 15 0.0379
+76.227.83.128 - - [22/Oct/2009 02:36:25] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 75 0.0007
+76.227.83.128 - - [22/Oct/2009 02:36:43] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 75 0.0007
+76.227.83.128 - - [22/Oct/2009 02:37:48] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 75 0.0007
+76.227.83.128 - - [22/Oct/2009 02:37:56] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 75 0.0007
+76.227.83.128 - - [22/Oct/2009 02:38:08] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 75 0.0007
+76.227.83.128 - - [22/Oct/2009 02:47:23] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 75 0.0007
+76.227.83.128 - - [22/Oct/2009 02:48:38] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 75 0.0007
+76.227.83.128 - - [22/Oct/2009 02:48:54] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 75 0.0010
+76.227.83.128 - - [22/Oct/2009 03:01:04] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 75 0.0007
+76.227.83.128 - - [22/Oct/2009 03:01:26] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 75 0.0007
+76.227.83.128 - - [22/Oct/2009 03:02:00] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 75 0.0008
+76.227.83.128 - - [22/Oct/2009 03:02:56] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 75 0.0007
+76.227.83.128 - - [22/Oct/2009 03:04:08] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 75 0.0007
+76.227.83.128 - - [22/Oct/2009 03:17:09] "GET /repos/5640875899/files/app.rb HTTP/1.1" 200 75 0.0007

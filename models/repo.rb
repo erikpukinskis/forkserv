@@ -21,7 +21,6 @@ module Grit
 
     def clone(dir)
       `git clone #{working_dir} #{dir}`
-      Repo.new(dir)
     end
   end
 end
