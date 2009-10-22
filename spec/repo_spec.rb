@@ -106,7 +106,24 @@ describe 'Repo' do
         @response.should be_ok
         response_object.length.should == 1
       end
-      
+    end
+
+    describe "getting an old file" do
+      before :all do
+        @repo_id = "1221"
+        Repo.stub!(:fresh_id).and_return(@repo_id)
+        FileUtils::rm_r(working_dir) if File.directory?(working_dir)
+        post '/repos'
+        post "/repos/#{@repo_id}/files/app.rb", {:content => "blah"}
+        get "/repos/#{@repo_id}/commits"
+        sha = response_object[0]["sha"]
+        post "/repos/#{@repo_id}/files/app.rb", {:content => "blee"}
+        get "/repos/#{@repo_id}/trees/#{sha}/raw/app.rb"
+      end
+
+      it "should return the old contents" do
+        @response.body.should == "blah"
+      end
     end
 
     describe "getting file contents" do

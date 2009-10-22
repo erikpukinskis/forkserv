@@ -117,4 +117,8 @@ class Repo
   def commits
     git.commits.inject([]) {|all,commit| all << {"sha" => commit.sha}}
   end
+
+  def raw(sha, filename)
+    git.tree(sha, filename).contents[0].data
+  end
 end

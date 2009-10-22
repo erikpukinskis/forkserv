@@ -34,3 +34,8 @@ get '/repos/:id/commits' do
   repo = Repo.new(params[:id])
   repo.commits.to_json
 end
+
+get '/repos/:id/trees/:sha/raw/:filename' do
+  repo = Repo.new(params[:id])
+  repo.raw(params[:sha], params[:filename])
+end
