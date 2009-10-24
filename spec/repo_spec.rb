@@ -21,6 +21,20 @@ end
 describe 'Repo' do
   require 'forkserv'
  
+  def obj(resp)
+    JSON.parse(resp.body)
+  end
+
+  def response_object
+    JSON.parse(response.body)
+  rescue
+    nil
+  end
+
+  def working_dir
+    "#{Repo.working_dirs_root}/#{@repo_id}"
+  end
+
   describe "after posting to /repos" do
     before :all do
       @repo_id = "1444"
@@ -29,31 +43,16 @@ describe 'Repo' do
       post '/repos'
     end
 
-    def response_object
-      JSON.parse(response.body)
-    rescue
-      nil
-    end
-
-    def working_dir
-      "#{Repo.working_dirs_root}/#{@repo_id}"
-    end
-
-    def response_should_be_ok
-      @response.should be_ok
-      response_object['status'].should == 'ok'
-    end
-
     def file_contents(name)
       File.open(name, 'r') {|f| f.read}
     end
 
     it "should return an OK response" do
-      response_should_be_ok
+      response.should be_ok
     end
 
     it "should return the id" do
-      response_object['repo_id'].should == '1444'
+      obj(response)['repo_id'].should == '1444'
     end
 
     it "should create a working dir" do
@@ -71,10 +70,12 @@ describe 'Repo' do
         FileUtils::rm_r(working_dir) if File.directory?(working_dir)
         post '/repos'
         post '/repos/1234/files/app.rb', {:content => "blah"}
+        @original_response = response
+        post '/repos/1234/commits'
       end
 
       it "should give a response" do
-        response_should_be_ok
+        @original_response.should be_ok
       end
 
       it "should create the file" do
@@ -99,6 +100,7 @@ describe 'Repo' do
         FileUtils::rm_r(working_dir) if File.directory?(working_dir)
         post '/repos'
         post '/repos/1001/files/app.rb', {:content => "blah"}
+        post '/repos/1001/commits'
         get '/repos/1001/commits'
       end
 
@@ -110,39 +112,16 @@ describe 'Repo' do
 
     describe "getting an old file" do
       before :all do
-        @repo_id = "2003"
-        Repo.stub!(:fresh_id).and_return(@repo_id)
-        FileUtils::rm_r(working_dir) if File.directory?(working_dir)
-        post '/repos'
-        post "/repos/2003/files/app.rb", {:content => "blah"}
-
-        @repo_id = "1987"
-        Repo.stub!(:fresh_id).and_return(@repo_id)
-        FileUtils::rm_r(working_dir) if File.directory?(working_dir)
-        post "/repos/2003/fork"
-      end
-
-      it "should return the old contents" do
-        @response.should be_ok
-        response_object['repo_id'].should == "1987"
-      end
-
-      it "should have made a new file" do
-        path = working_dir + "/app.rb"
-        path.should be_a_file
-      end
-    end
-
-    describe "getting an old file" do
-      before :all do
         @repo_id = "1221"
         Repo.stub!(:fresh_id).and_return(@repo_id)
         FileUtils::rm_r(working_dir) if File.directory?(working_dir)
         post '/repos'
         post "/repos/#{@repo_id}/files/app.rb", {:content => "blah"}
+        post "/repos/#{@repo_id}/commits"
         get "/repos/#{@repo_id}/commits"
         sha = response_object[0]["sha"]
         post "/repos/#{@repo_id}/files/app.rb", {:content => "blee"}
+        post "/repos/#{@repo_id}/commits"
         get "/repos/#{@repo_id}/trees/#{sha}/raw/app.rb"
       end
 
@@ -158,13 +137,35 @@ describe 'Repo' do
         FileUtils::rm_r(working_dir) if File.directory?(working_dir)
         post '/repos'
         post '/repos/1111/files/app.rb', {:content => "blah"}
+        post '/repos/1111/commits'
       end
 
       it "should return the contents" do
         get '/repos/1111/files/app.rb'
-        @response.body.should == "blah"
+        response.body.should == "blah"
       end
     end
+
+    describe "merging and committing in the style of autosave" do
+      it "should not commit before we ask" do
+        post "/repos"
+        id = response_object['repo_id']
+        post "/repos/#{id}/files/foo", {:content => "bar"}
+        get "/repos/#{id}/commits"
+        response_object.length.should == 0
+      end
+
+      it "should have a commit after we explicitly commit" do
+        post "/repos"
+        id = response_object['repo_id']
+        post "/repos/#{id}/files/foo", {:content => "bar"}
+        post "/repos/#{id}/commits", {:message => "the message"}
+        get "/repos/#{id}/commits"
+        response_object.length.should == 1
+        response_object[0]['message'].should == "the message"
+      end
+    end
+
 
     #
     # NOTE: This scenario is disabled because I don't want
@@ -190,12 +191,13 @@ describe 'Repo' do
           require 'app'
           run Sinatra::Application
         "}
+        post '/repos/1222/commits'
         #post '/repos/1222/deploy'
       end
 
       it "should give a response" do
         pending
-        response_should_be_ok
+        response.should be_ok
       end
 
       it "should return a heroku url" do

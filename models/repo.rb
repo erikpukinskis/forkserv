@@ -79,7 +79,11 @@ class Repo
     FileUtils::chdir(working_dir)
     File.open(path, 'w') {|f| f.write(content) }
     git.add(name)
-    git.commit_index("saved #{name}")
+  end
+
+  def commit(message)
+    message ||= "something"
+    git.commit_index(message)
   end
 
   def file_contents(name)
@@ -125,7 +129,7 @@ class Repo
   end
 
   def commits
-    git.commits.inject([]) {|all,commit| all << {"sha" => commit.sha}}
+    git.commits.inject([]) {|all,commit| all << {"sha" => commit.sha, "message" => commit.message}}
   end
 
   def raw(sha, filename)
