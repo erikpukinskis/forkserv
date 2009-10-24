@@ -45,6 +45,7 @@ end
 post '/repos/:id/commits' do
   repo = Repo.new(params[:id])
   repo.commit(params[:message])
+  {'status' => 'ok'}.to_json
 end
 
 get '/repos/:id/trees/:sha/raw/:filename' do
