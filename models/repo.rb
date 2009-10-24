@@ -129,7 +129,9 @@ class Repo
   end
 
   def commits
-    git.commits.inject([]) {|all,commit| all << {"sha" => commit.sha, "message" => commit.message}}
+    git.commits.inject([]) do |all,commit| 
+      all << {"sha" => commit.sha, "message" => commit.message}
+    end.reverse
   end
 
   def raw(sha, filename)
