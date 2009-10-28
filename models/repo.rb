@@ -130,7 +130,7 @@ class Repo
 
   def commits
     git.commits.inject([]) do |all,commit| 
-      all << {"sha" => commit.sha, "message" => commit.message}
+      all << {"sha" => commit.sha, "message" => commit.message, "date" => commit.date.to_i}
     end.reverse
   end
 
