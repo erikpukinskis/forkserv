@@ -1,10 +1,7 @@
-require 'sinatra'
-require 'spec/interop/test'
-require 'sinatra/test/unit'
-require 'models/repo'
-require 'json'
-require 'grit'
-require 'net/http'
+require 'forkserv'
+require 'spec'
+require 'rack/test'
+require 'spec_helper'
  
 Spec::Matchers.define :be_a_directory do
   match do |actual|
@@ -18,15 +15,21 @@ Spec::Matchers.define :be_a_file do
   end
 end
  
-describe 'Repo' do
-  require 'forkserv'
+set :environment, :test
+
+describe 'ForkServ' do
+  include Rack::Test::Methods
+
+  def app
+    ForkServ
+  end
  
   def obj(resp)
     JSON.parse(resp.body)
   end
 
   def response_object
-    JSON.parse(response.body)
+    JSON.parse(last_response.body)
   rescue
     nil
   end
@@ -48,11 +51,11 @@ describe 'Repo' do
     end
 
     it "should return an OK response" do
-      response.should be_ok
+      last_response.should be_ok
     end
 
     it "should return the id" do
-      obj(response)['repo_id'].should == '1444'
+      obj(last_response)['repo_id'].should == '1444'
     end
 
     it "should create a working dir" do
@@ -70,7 +73,7 @@ describe 'Repo' do
         FileUtils::rm_r(working_dir) if File.directory?(working_dir)
         post '/repos'
         post '/repos/1234/files/app.rb', {:content => "blah"}
-        @original_response = response
+        @original_response = last_response
         post '/repos/1234/commits'
       end
 
@@ -105,7 +108,7 @@ describe 'Repo' do
       end
 
       it "should return one item" do
-        @response.should be_ok
+        last_response.should be_ok
         response_object.length.should == 1
       end
     end
@@ -126,7 +129,7 @@ describe 'Repo' do
       end
 
       it "should return the old contents" do
-        @response.body.should == "blah"
+        last_response.body.should == "blah"
       end
     end
 
@@ -142,7 +145,7 @@ describe 'Repo' do
 
       it "should return the contents" do
         get '/repos/1111/files/app.rb'
-        response.body.should == "blah"
+        last_response.body.should == "blah"
       end
     end
 
@@ -192,21 +195,19 @@ describe 'Repo' do
           run Sinatra::Application
         "}
         post '/repos/1222/commits'
-        #post '/repos/1222/deploy'
+        post '/repos/1222/deploy'
+        Delayed::Job.work_off
       end
 
       it "should give a response" do
-        pending
-        response.should be_ok
+        last_response.should be_ok
       end
 
       it "should return a heroku url" do
-        pending
         response_object['uri'].should match(/http:\/\/[a-z0-9-]{5,}\.heroku\.com/)
       end
 
       it "should be running and say hello world" do
-        pending
         http_response = Net::HTTP.get_response(URI.parse(response_object['uri']))  
         http_response.body.should match(/hello world!/)
       end
