@@ -95,9 +95,10 @@ describe 'ForkServ' do
     describe "getting commits" do
       before :all do
         post '/repos'
-        post '/repos/1001/files/app.rb', {:content => "blah"}
-        post '/repos/1001/commits'
-        get '/repos/1001/commits'
+        @id = obj(last_response)['repo_id']
+        post "/repos/#{@id}/files/app.rb", {:content => "blah"}
+        post "/repos/#{@id}/commits"
+        get "/repos/#{@id}/commits"
       end
 
       it "should return one item" do
