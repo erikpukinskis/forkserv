@@ -110,13 +110,14 @@ describe 'ForkServ' do
     describe "getting an old file" do
       before :all do
         post '/repos'
-        post "/repos/#{@repo_id}/files/app.rb", {:content => "blah"}
-        post "/repos/#{@repo_id}/commits"
-        get "/repos/#{@repo_id}/commits"
+        @id = obj(last_response)['repo_id']
+        post "/repos/#{@id}/files/app.rb", {:content => "blah"}
+        post "/repos/#{@id}/commits"
+        get "/repos/#{@id}/commits"
         sha = response_object[0]["sha"]
-        post "/repos/#{@repo_id}/files/app.rb", {:content => "blee"}
-        post "/repos/#{@repo_id}/commits"
-        get "/repos/#{@repo_id}/trees/#{sha}/raw/app.rb"
+        post "/repos/#{@id}/files/app.rb", {:content => "blee"}
+        post "/repos/#{@id}/commits"
+        get "/repos/#{@id}/trees/#{sha}/raw/app.rb"
       end
 
       it "should return the old contents" do
