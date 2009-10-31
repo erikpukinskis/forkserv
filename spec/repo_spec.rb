@@ -34,16 +34,18 @@ describe 'ForkServ' do
     nil
   end
 
-  def working_dir
-    "#{Repo.working_dirs_root}/#{@repo_id}"
+  def working_dir(id)
+    "#{Repo.working_dirs_root}/#{id}"
+  end
+
+  it "should give a proper environment" do
+    Repo.working_dirs_root.should == "/tmp/forkserv_working_dirs/test"
   end
 
   describe "after posting to /repos" do
     before :all do
-      @repo_id = "1444"
-      Repo.stub!(:fresh_id).and_return(@repo_id)
-      FileUtils::rm_r(working_dir) if File.directory?(working_dir)
       post '/repos'
+      @id = obj(last_response)['repo_id']
     end
 
     def file_contents(name)
@@ -54,23 +56,16 @@ describe 'ForkServ' do
       last_response.should be_ok
     end
 
-    it "should return the id" do
-      obj(last_response)['repo_id'].should == '1444'
-    end
-
     it "should create a working dir" do
-      working_dir.should be_a_directory
+      working_dir(@id).should be_a_directory
     end
 
     it "should initialize a git repository" do
-      lambda {Grit::Repo.new(working_dir)}.should_not raise_error
+      lambda {Grit::Repo.new(working_dir(@id))}.should_not raise_error
     end
 
     describe "posting some file contents" do
       before :all do
-        @repo_id = "1234"
-        Repo.stub!(:fresh_id).and_return(@repo_id)
-        FileUtils::rm_r(working_dir) if File.directory?(working_dir)
         post '/repos'
         post '/repos/1234/files/app.rb', {:content => "blah"}
         @original_response = last_response
@@ -98,9 +93,6 @@ describe 'ForkServ' do
 
     describe "getting commits" do
       before :all do
-        @repo_id = "1001"
-        Repo.stub!(:fresh_id).and_return(@repo_id)
-        FileUtils::rm_r(working_dir) if File.directory?(working_dir)
         post '/repos'
         post '/repos/1001/files/app.rb', {:content => "blah"}
         post '/repos/1001/commits'
@@ -115,9 +107,6 @@ describe 'ForkServ' do
 
     describe "getting an old file" do
       before :all do
-        @repo_id = "1221"
-        Repo.stub!(:fresh_id).and_return(@repo_id)
-        FileUtils::rm_r(working_dir) if File.directory?(working_dir)
         post '/repos'
         post "/repos/#{@repo_id}/files/app.rb", {:content => "blah"}
         post "/repos/#{@repo_id}/commits"
@@ -135,9 +124,6 @@ describe 'ForkServ' do
 
     describe "getting file contents" do
       before :all do
-        @repo_id = "1111"
-        Repo.stub!(:fresh_id).and_return(@repo_id)
-        FileUtils::rm_r(working_dir) if File.directory?(working_dir)
         post '/repos'
         post '/repos/1111/files/app.rb', {:content => "blah"}
         post '/repos/1111/commits'
@@ -178,9 +164,6 @@ describe 'ForkServ' do
     #
     describe "posting a complete sinatra app" do
       before :all do
-        @repo_id = "1222"
-        Repo.stub!(:fresh_id).and_return(@repo_id)
-        FileUtils::rm_r(working_dir) if File.directory?(working_dir)
         post '/repos'
         post '/repos/1222/files/app.rb', {:content => "
           require 'rubygems'
@@ -197,10 +180,7 @@ describe 'ForkServ' do
         post '/repos/1222/commits'
         post '/repos/1222/deploy'
         Delayed::Job.work_off
-      end
-
-      it "should give a response" do
-        last_response.should be_ok
+        get '/repos/1222'
       end
 
       it "should return a heroku url" do

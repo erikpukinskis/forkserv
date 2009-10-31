@@ -28,7 +28,7 @@ class ForkServ < Sinatra::Base
   end
 
   post '/repos' do
-    repo = Repo.new
+    repo = Repo.create!
     content_type :json
     {'status' => 'ok', 'repo_id' => repo.id}.to_json
   end

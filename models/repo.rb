@@ -1,6 +1,7 @@
 require 'grit'
 require 'heroku'
 require 'ruby-debug'
+require 'activerecord'
 
 module Grit
   class Repo
@@ -31,26 +32,9 @@ class String
   end
 end
 
-class Repo
-  attr_accessor :id, :uri, :heroku_name
-
-  def initialize(id = nil)
-    if id
-      self.id = id
-    else
-      self.id = Repo.fresh_id
-      m = make_dir
-      initialize_git
-    end
-  end
-
-  def Repo.fresh_id
-    while(candidate = rand(10**10))
-      repo = Repo.new(candidate)
-      break if !File.directory?(repo.working_dir)
-    end
-    candidate
-  end
+class Repo < ActiveRecord::Base
+  attr_accessor :heroku_name
+  after_create :make_dir, :initialize_git
 
   def git
     @git ||= Grit::Repo.new(working_dir)
@@ -92,7 +76,7 @@ class Repo
   end
 
   def Repo.working_dirs_root 
-    '/tmp/forkserv_working_dirs' 
+    "/tmp/forkserv_working_dirs/#{Sinatra::Application.environment.to_s}"
   end
 
 
@@ -104,13 +88,13 @@ class Repo
     git.remotes.include?('heroku')
   end
 
-  def create
+  def heroku_create
     self.heroku_name = heroku.create
     git.add_remote('heroku', "git@heroku.com:#{heroku_name}.git")
   end
 
   def deploy
-    create unless created? 
+    heroku_create unless created? 
     f = git.push('heroku', 'master')
   end
 
