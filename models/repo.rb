@@ -33,7 +33,6 @@ class String
 end
 
 class Repo < ActiveRecord::Base
-  attr_accessor :heroku_name
   after_create :make_dir, :initialize_git
 
   def git
@@ -89,7 +88,6 @@ class Repo < ActiveRecord::Base
   end
 
   def heroku_create
-    debugger
     update_attributes(:heroku_name => heroku.create)
     git.add_remote('heroku', "git@heroku.com:#{heroku_name}.git")
   end

@@ -1,3 +1,5 @@
+ENV['RACK_ENV'] = "test"
+
 dir = "/tmp/forkserv_working_dirs/test"
 FileUtils::rm_r(dir) if File.directory?(dir)
 

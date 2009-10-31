@@ -14,10 +14,7 @@ $config = YAML::load(File.read('config.yml'))
 
 set :port, ARGV[1] if ARGV[0] == "-p"
 
-
-
 class ForkServ < Sinatra::Base
-
   configure do
     config = YAML::load(File.open('config/database.yml'))
     environment = Sinatra::Application.environment.to_s
