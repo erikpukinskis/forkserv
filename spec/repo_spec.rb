@@ -67,9 +67,10 @@ describe 'ForkServ' do
     describe "posting some file contents" do
       before :all do
         post '/repos'
-        post '/repos/1234/files/app.rb', {:content => "blah"}
+        @id = obj(last_response)['repo_id']
+        post "/repos/#{@id}/files/app.rb", {:content => "blah"}
         @original_response = last_response
-        post '/repos/1234/commits'
+        post "/repos/#{@id}/commits"
       end
 
       it "should give a response" do
@@ -77,15 +78,15 @@ describe 'ForkServ' do
       end
 
       it "should create the file" do
-        "#{working_dir}/app.rb".should be_a_file
+        "#{working_dir(@id)}/app.rb".should be_a_file
       end
 
       it "should write the text" do
-        file_contents("#{working_dir}/app.rb").should == "blah"
+        file_contents("#{working_dir(@id)}/app.rb").should == "blah"
       end
 
       it "should have added the file to the tree" do
-        repo = Grit::Repo.new(working_dir)
+        repo = Grit::Repo.new(working_dir(@id))
         repo.tree.contents.length.should == 1
         repo.tree.contents[0].name.should == "app.rb"
       end
