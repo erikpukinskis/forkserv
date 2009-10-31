@@ -128,12 +128,13 @@ describe 'ForkServ' do
     describe "getting file contents" do
       before :all do
         post '/repos'
-        post '/repos/1111/files/app.rb', {:content => "blah"}
-        post '/repos/1111/commits'
+        @id = obj(last_response)['repo_id']
+        post "/repos/#{@id}/files/app.rb", {:content => "blah"}
+        post "/repos/#{@id}/commits"
+        get "/repos/#{@id}/files/app.rb"
       end
 
       it "should return the contents" do
-        get '/repos/1111/files/app.rb'
         last_response.body.should == "blah"
       end
     end
@@ -168,7 +169,8 @@ describe 'ForkServ' do
     describe "posting a complete sinatra app" do
       before :all do
         post '/repos'
-        post '/repos/1222/files/app.rb', {:content => "
+        id = response_object['repo_id']
+        post "/repos/#{id}/files/app.rb", {:content => "
           require 'rubygems'
           require 'sinatra'
     
@@ -176,17 +178,18 @@ describe 'ForkServ' do
             'hello world!'
           end
         "}
-        post '/repos/1222/files/config.ru', {:content => "
+        post "/repos/#{id}/files/config.ru", {:content => "
           require 'app'
           run Sinatra::Application
         "}
-        post '/repos/1222/commits'
-        post '/repos/1222/deploy'
+        post "/repos/#{id}/commits"
+        post "/repos/#{id}/deploy"
         Delayed::Job.work_off
-        get '/repos/1222'
+        get "/repos/#{id}"
       end
 
       it "should return a heroku url" do
+        debugger
         response_object['uri'].should match(/http:\/\/[a-z0-9-]{5,}\.heroku\.com/)
       end
 

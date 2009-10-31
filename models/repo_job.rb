@@ -5,10 +5,10 @@ class RepoJob
   end
 
   def repo
-    @repo ||= Repo.new(@id)
+    @repo ||= Repo.find(@id)
   end
 
   def perform
-    repo.send(action)
+    repo.send(@action)
   end
 end

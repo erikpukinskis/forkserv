@@ -58,14 +58,22 @@ class ForkServ < Sinatra::Base
     {'status' => 'ok', 'repo_id' => fork.id}.to_json
   end
 
+  get '/repos/:id' do
+    repo = Repo.find(params[:id])
+    content_type :json    
+    {:id => repo.id, :uri => repo.uri}.to_json
+  end
+
   get '/repos/:id/commits' do
     repo = Repo.find(params[:id])
+    content_type :json
     repo.commits.to_json
   end
 
   post '/repos/:id/commits' do
     repo = Repo.find(params[:id])
     repo.commit(params[:message])
+    content_type :json
     {'status' => 'ok'}.to_json
   end
 

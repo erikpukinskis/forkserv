@@ -89,7 +89,8 @@ class Repo < ActiveRecord::Base
   end
 
   def heroku_create
-    self.heroku_name = heroku.create
+    debugger
+    update_attributes(:heroku_name => heroku.create)
     git.add_remote('heroku', "git@heroku.com:#{heroku_name}.git")
   end
 
