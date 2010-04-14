@@ -1,12 +1,10 @@
-$:.unshift *Dir[File.dirname(__FILE__) + "/vendor/*/lib"]
-
 require 'rubygems'
 require 'sinatra'
 require 'sinatra/base'
 require 'models/repo'
 require 'activerecord'
 require 'delayed_job'
-require 'activerecord'
+require 'active_record'
 require 'models/repo_job'
 
 
@@ -25,6 +23,7 @@ class ForkServ < Sinatra::Base
   end
 
   post '/repos' do
+    debugger
     repo = Repo.create!
     content_type :json
     {'status' => 'ok', 'repo_id' => repo.id}.to_json
@@ -78,5 +77,4 @@ class ForkServ < Sinatra::Base
     repo = Repo.find(params[:id])
     repo.raw(params[:sha], params[:filename])
   end
-
 end
