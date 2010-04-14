@@ -1,7 +1,7 @@
 require 'grit'
 require 'heroku'
 require 'ruby-debug'
-require 'activerecord'
+require 'active_record'
 
 module Grit
   class Repo
