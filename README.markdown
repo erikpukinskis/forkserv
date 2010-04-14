@@ -11,6 +11,8 @@ ForkServ is a RESTful http-based front end for Git.  It lets you do things like 
         POST /repos/commits {'message': 'prints out a hello'}
         # saves app.rb and returns {'success': true, 'commit': '35665e8971925d42b179e70f284eb99feed18354'}
 
+It's currently very rough, but some of it works.
+
 ### Why
 
 It's nice for web-based IDEs to use for hosting code.  It can act as a storage layer for
@@ -29,7 +31,7 @@ But it shouldn't be terribly different for other setups.
 5. gem install activerecord rest-client -v 1.3.0 
    heroku camping fcgi memcache-client builder hoe  
    sinatra grit test-spec fcgi mongrel shotgun rack-test 
-   haml maruku erubis less ruby-debug sqlite3-ruby delayed_job
+   haml maruku erubis less ruby-debug sqlite3-ruby delayed_job thin
 4. cd /opt
 5. git clone http://github.com/erikpukinskis/forkserv.git
 6. cd forkserv
