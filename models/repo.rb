@@ -1,7 +1,5 @@
 require 'grit'
 require 'heroku'
-require 'ruby-debug'
-require 'active_record'
 
 module Grit
   class Repo
@@ -32,8 +30,15 @@ class String
   end
 end
 
-class Repo < ActiveRecord::Base
-  after_create :make_dir, :initialize_git
+class Repo
+  include DataMapper::Resource
+  property :id, Serial
+  property :heroku_name, String
+
+  after :create do
+    make_dir
+    initialize_git
+  end
 
   def git
     @git ||= Grit::Repo.new(working_dir)

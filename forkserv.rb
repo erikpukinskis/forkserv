@@ -1,29 +1,24 @@
 require 'rubygems'
 require 'sinatra'
-require 'sinatra/base'
-require 'models/repo'
-require 'activerecord'
-require 'delayed_job'
-require 'active_record'
-require 'models/repo_job'
+require 'dm-core'
+require 'delayed_job_data_mapper'
+require 'json'
 
+Dir[File.dirname(__FILE__) + "/models/*.rb"].each { |f| require f }
+
+DataMapper.setup(:default,
+  :adapter  => 'mongo',
+  :database => 'forkserv',
+)
 
 $config = YAML::load(File.read('config.yml'))
 
-set :port, ARGV[1] if ARGV[0] == "-p"
-
 class ForkServ < Sinatra::Base
   configure do
-    config = YAML::load(File.open('config/database.yml'))
     environment = Sinatra::Application.environment.to_s
-    ActiveRecord::Base.logger = Logger.new($stdout)
-    ActiveRecord::Base.establish_connection(
-      config[environment]
-    )
   end
 
   post '/repos' do
-    debugger
     repo = Repo.create!
     content_type :json
     {'status' => 'ok', 'repo_id' => repo.id}.to_json

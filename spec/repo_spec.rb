@@ -1,21 +1,4 @@
 require File.expand_path(File.dirname(__FILE__) + '/spec_helper')
-require 'forkserv'
-require 'spec'
-require 'rack/test'
- 
-Spec::Matchers.define :be_a_directory do
-  match do |actual|
-    File.directory?(actual)
-  end
-end
-
-Spec::Matchers.define :be_a_file do
-  match do |actual|
-    File.exists?(actual)
-  end
-end
- 
-set :environment, :test
 
 describe 'ForkServ' do
   include Rack::Test::Methods
