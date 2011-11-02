@@ -19,12 +19,13 @@ class ForkServ < Sinatra::Base
   end
 
   post '/repos' do
-    repo = Repo.create!
+    repo = Repo.create
     content_type :json
     {'status' => 'ok', 'repo_id' => repo.id}.to_json
   end
 
   post '/repos/:id/files/:filename' do
+    debugger
     repo = Repo.find(params[:id])
     repo.save_file(params[:filename], params[:content])
     content_type :json

@@ -40,6 +40,10 @@ class Repo
     initialize_git
   end
 
+  def id
+    self['id'].to_s
+  end
+
   def git
     @git ||= Grit::Repo.new(working_dir)
   end

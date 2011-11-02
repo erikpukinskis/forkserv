@@ -5,6 +5,7 @@ FileUtils::rm_r(dir) if File.directory?(dir)
 
 require File.join(File.dirname(__FILE__), "..", "forkserv")
 require 'rack/test'
+require 'ruby-debug'
  
 Spec::Matchers.define :be_a_directory do
   match do |actual|
