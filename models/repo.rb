@@ -1,25 +1,33 @@
 require 'grit'
 require 'heroku'
+require 'mongo_adapter'
 
 module Grit
   class Repo
+    def cmd(command)
+      FileUtils.chdir working_dir      
+      `git #{command}`
+    end
+
+    def self.init(dir)
+      FileUtils.chdir dir
+      `git init`
+    end
+
     def remotes
-      FileUtils.chdir working_dir
-      `git remote`.split(/\n/)
+      cmd("remote").split(/\n/)
     end
 
     def add_remote(name, uri)
-      FileUtils.chdir working_dir
-      `git remote add #{name} #{uri}`
+      cmd "remote add #{name} #{uri}"
     end
 
     def push(remote, branch)
-      FileUtils.chdir working_dir
-      `git push #{remote} #{branch}`
+      cmd "push #{remote} #{branch}"
     end
 
     def clone(dir)
-      `git clone #{working_dir} #{dir}`
+      cmd "clone #{working_dir} #{dir}"
     end
   end
 end
@@ -31,17 +39,14 @@ class String
 end
 
 class Repo
-  include DataMapper::Resource
-  property :id, Serial
+  include DataMapper::Mongo::Resource
+  property :id, ObjectId
   property :heroku_name, String
+  property :active, Boolean, :default => true
 
   after :create do
     make_dir
     initialize_git
-  end
-
-  def id
-    self['id'].to_s
   end
 
   def git
@@ -53,7 +58,7 @@ class Repo
   end
 
   def initialize_git
-    Grit::Repo.init_bare("#{working_dir}/.git")
+    Grit::Repo.init(working_dir)
   end
 
   def working_dir

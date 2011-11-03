@@ -6,14 +6,17 @@ FileUtils::rm_r(dir) if File.directory?(dir)
 require File.join(File.dirname(__FILE__), "..", "forkserv")
 require 'rack/test'
 require 'ruby-debug'
- 
-Spec::Matchers.define :be_a_directory do
+
+Debugger.start
+Debugger.settings[:autoeval] = true
+
+RSpec::Matchers.define :be_a_directory do
   match do |actual|
     File.directory?(actual)
   end
 end
 
-Spec::Matchers.define :be_a_file do
+RSpec::Matchers.define :be_a_file do
   match do |actual|
     File.exists?(actual)
   end

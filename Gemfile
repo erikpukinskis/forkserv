@@ -10,6 +10,7 @@ gem "heroku"
 gem "rest-client"
 gem "rack-test"
 gem "json"
+gem "bson_ext"
 
 group :development do
   gem "rspec"
